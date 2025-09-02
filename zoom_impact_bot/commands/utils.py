@@ -7,6 +7,7 @@ def roles_for(user_id:int) -> list[str]:
 
 def role_menu(roles: list[str]) -> InlineKeyboardMarkup:
     rows = []
+    # Fixed InlineKeyboardButton calls for aiogram v3 compatibility
     rows.append([InlineKeyboardButton(text="📅 Next", callback_data="next"),
                  InlineKeyboardButton(text="🗓 Week", callback_data="week")])
     rows.append([InlineKeyboardButton(text="📎 Slides", callback_data="slides"),
