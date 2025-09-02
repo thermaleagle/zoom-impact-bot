@@ -90,6 +90,18 @@ def get_template(key: str) -> str | None:
             return row.get("url")
     return None
 
+def get_categories():
+    """Get list of available categories from the Categories sheet."""
+    try:
+        ws = get_ws("Categories")
+        rows = ws.get_all_records()
+        categories = [row.get("category", "").strip() for row in rows if row.get("category", "").strip()]
+        return categories
+    except Exception as e:
+        print(f"Error getting categories: {e}")
+        # Return default categories if sheet doesn't exist
+        return ["LC", "MC", "Impact", "Leadership", "Teamwork", "Innovation", "Other"]
+
 def add_recognition(upline, downline, category, month, remarks):
     """Add a recognition entry to the Recognitions sheet."""
     try:

@@ -3,6 +3,7 @@ import asyncio
 import logging
 from aiogram import Bot, Dispatcher, types, F
 from aiogram.filters import Command
+from aiogram.fsm.storage.memory import MemoryStorage
 from dotenv import load_dotenv
 
 from zoom_impact_bot.commands import events, recognition, templates, utils
@@ -15,7 +16,8 @@ def main():
         raise SystemExit("BOT_TOKEN is not set. Put it in .env or export it before running.")
 
     bot = Bot(bot_token)
-    dp = Dispatcher()
+    storage = MemoryStorage()
+    dp = Dispatcher(storage=storage)
 
     @dp.message(Command("start"))
     async def start(m: types.Message):
