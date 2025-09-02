@@ -17,9 +17,15 @@ def register(dp: Dispatcher):
             if len(parts) < 5:
                 raise ValueError("incomplete")
             upline, downline, category, month, remarks = parts[:5]
+            
+            # Debug: Log the parsed values
+            print(f"Recognition data: upline='{upline}', downline='{downline}', category='{category}', month='{month}', remarks='{remarks}'")
+            
             sheets.add_recognition(upline, downline, category, month, remarks)
             await m.answer(f"✅ Recognition added for {downline} in {category}.")
-        except Exception:
+        except Exception as e:
+            # Debug: Log the actual error
+            print(f"Recognition error: {e}")
             await m.answer("⚠️ Error. Format:\n"
                            "`/rec Upline | Downline | Category | Month | Remarks`",
                            parse_mode="Markdown")

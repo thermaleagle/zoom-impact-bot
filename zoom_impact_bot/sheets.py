@@ -92,5 +92,12 @@ def get_template(key: str) -> str | None:
 
 def add_recognition(upline, downline, category, month, remarks):
     """Add a recognition entry to the Recognitions sheet."""
-    ws = get_ws("Recognitions")
-    ws.append_row([upline, downline, category, month, remarks])
+    try:
+        print(f"Adding recognition: {[upline, downline, category, month, remarks]}")
+        ws = get_ws("Recognitions")
+        print(f"Got worksheet: {ws.title}")
+        ws.append_row([upline, downline, category, month, remarks])
+        print("Recognition added successfully")
+    except Exception as e:
+        print(f"Error in add_recognition: {e}")
+        raise
