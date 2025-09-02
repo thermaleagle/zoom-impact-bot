@@ -36,18 +36,82 @@ def register(dp: Dispatcher):
         # Get categories from spreadsheet
         categories = sheets.get_categories()
         
-        # Create category selection keyboard
+        # Check if categories were found
+        if not categories:
+            await m.answer("❌ **No categories found!**\n\n"
+                          "Please create a 'Recognition-Categories' sheet with categories in column A.")
+            await state.clear()
+            return
+        
+        # Create category selection keyboard with better organization
         keyboard = []
-        for i in range(0, len(categories), 2):
-            row = []
-            for j in range(2):
-                if i + j < len(categories):
-                    category = categories[i + j]
-                    row.append(InlineKeyboardButton(
-                        text=category,
-                        callback_data=f"cat_{category}"
-                    ))
-            keyboard.append(row)
+        
+        # Group categories for better display
+        percentage_cats = [cat for cat in categories if cat.endswith('%')]
+        level_cats = [cat for cat in categories if cat in ['Gold', 'Platinum', 'Executive Platinum', 'Founder Platinum', 'Core']]
+        lc_cats = [cat for cat in categories if 'LC' in cat or cat == 'ELC']
+        pace_cats = [cat for cat in categories if 'PaceSetter' in cat]
+        other_cats = [cat for cat in categories if cat not in percentage_cats + level_cats + lc_cats + pace_cats]
+        
+        # Add percentage categories (2 per row)
+        if percentage_cats:
+            for i in range(0, len(percentage_cats), 2):
+                row = []
+                for j in range(2):
+                    if i + j < len(percentage_cats):
+                        category = percentage_cats[i + j]
+                        row.append(InlineKeyboardButton(
+                            text=category,
+                            callback_data=f"cat_{category}"
+                        ))
+                keyboard.append(row)
+        
+        # Add level categories (2 per row)
+        if level_cats:
+            for i in range(0, len(level_cats), 2):
+                row = []
+                for j in range(2):
+                    if i + j < len(level_cats):
+                        category = level_cats[i + j]
+                        row.append(InlineKeyboardButton(
+                            text=category,
+                            callback_data=f"cat_{category}"
+                        ))
+                keyboard.append(row)
+        
+        # Add LC categories (2 per row)
+        if lc_cats:
+            for i in range(0, len(lc_cats), 2):
+                row = []
+                for j in range(2):
+                    if i + j < len(lc_cats):
+                        category = lc_cats[i + j]
+                        row.append(InlineKeyboardButton(
+                            text=category,
+                            callback_data=f"cat_{category}"
+                        ))
+                keyboard.append(row)
+        
+        # Add PaceSetter categories (1 per row due to long names)
+        if pace_cats:
+            for category in pace_cats:
+                keyboard.append([InlineKeyboardButton(
+                    text=category,
+                    callback_data=f"cat_{category}"
+                )])
+        
+        # Add other categories (2 per row)
+        if other_cats:
+            for i in range(0, len(other_cats), 2):
+                row = []
+                for j in range(2):
+                    if i + j < len(other_cats):
+                        category = other_cats[i + j]
+                        row.append(InlineKeyboardButton(
+                            text=category,
+                            callback_data=f"cat_{category}"
+                        ))
+                keyboard.append(row)
         
         # Add cancel button
         keyboard.append([InlineKeyboardButton(text="❌ Cancel", callback_data="cancel_recognition")])

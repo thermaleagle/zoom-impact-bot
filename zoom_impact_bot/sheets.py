@@ -91,16 +91,21 @@ def get_template(key: str) -> str | None:
     return None
 
 def get_categories():
-    """Get list of available categories from the Categories sheet."""
+    """Get list of available categories from the Recognition-Categories sheet."""
     try:
-        ws = get_ws("Categories")
-        rows = ws.get_all_records()
-        categories = [row.get("category", "").strip() for row in rows if row.get("category", "").strip()]
+        ws = get_ws("Recognition-Categories")
+        # Get all values from column A (first column)
+        categories = ws.col_values(1)
+        # Remove empty strings and strip whitespace
+        categories = [cat.strip() for cat in categories if cat.strip()]
+        # Remove header if it exists (first row might be a header)
+        if categories and categories[0].lower() in ['category', 'categories', 'name']:
+            categories = categories[1:]
         return categories
     except Exception as e:
-        print(f"Error getting categories: {e}")
-        # Return default categories if sheet doesn't exist
-        return ["LC", "MC", "Impact", "Leadership", "Teamwork", "Innovation", "Other"]
+        print(f"Error getting categories from Recognition-Categories sheet: {e}")
+        # Return empty list if sheet doesn't exist or has issues
+        return []
 
 def add_recognition(upline, downline, category, month, remarks):
     """Add a recognition entry to the Recognitions sheet."""
