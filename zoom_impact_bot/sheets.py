@@ -10,11 +10,11 @@ SHEET_NAME = os.getenv("SHEET_NAME", "Zoom Impact Bot Data")
 SERVICE_JSON = os.getenv("GOOGLE_SERVICE_JSON", "service_account.json")
 
 # Debug information for Railway deployment
-print(f"Environment check:")
+print("Environment check:")
 print(f"SHEET_NAME: {SHEET_NAME}")
 print(f"SERVICE_JSON type: {type(SERVICE_JSON)}")
 print(f"SERVICE_JSON length: {len(SERVICE_JSON) if SERVICE_JSON else 'None'}")
-print(f"SERVICE_JSON starts with '{{': {SERVICE_JSON.startswith('{') if SERVICE_JSON else False}}")
+print(f"SERVICE_JSON starts with '{{': {SERVICE_JSON.startswith('{') if SERVICE_JSON else False}")
 
 scope = [
     "https://spreadsheets.google.com/feeds",
