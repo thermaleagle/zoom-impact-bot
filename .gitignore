@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.egg-info/
+.venv/
+.env
+.env.local
+.env.production
+.env.staging
+
+# Mac/OS
+.DS_Store
+
+# Secrets and sensitive files
+service_account.json
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+!*.config.json
+credentials.json
+token.json
+secrets.json
+config.json
+auth.json
+keys.json
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+__pycache__/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

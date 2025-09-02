@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zoom-impact-bot"
+version = "0.1.0"
+description = "Telegram bot for Zoom Impact Group with Google Sheets backend"
+authors = [{ name = "Roshan" }]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "aiogram>=3.5,<4",
+  "gspread>=6,<7",
+  "oauth2client>=4,<5",
+  "python-dotenv>=1.0,<2"
+]
+
+[project.scripts]
+zoom-impact-bot = "zoom_impact_bot.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["zoom_impact_bot", "zoom_impact_bot.commands"]
