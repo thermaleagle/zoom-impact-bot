@@ -17,6 +17,12 @@ def main():
     bot = Bot(bot_token)
     dp = Dispatcher()
 
+    @dp.message(Command("start"))
+    async def start(m: types.Message):
+        roles = utils.roles_for(m.from_user.id)
+        kb = utils.role_menu(roles)
+        await m.answer("👋 Welcome to Zoom Impact Bot!\n📋 Choose an action:", reply_markup=kb)
+
     @dp.message(Command("menu"))
     async def menu(m: types.Message):
         roles = utils.roles_for(m.from_user.id)
