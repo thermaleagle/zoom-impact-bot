@@ -21,7 +21,16 @@ if SERVICE_JSON.startswith('{'):
     creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
 else:
     # File path provided (local development)
-    creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_JSON, scope)
+    # Check if file exists before trying to use it
+    if os.path.exists(SERVICE_JSON):
+        creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_JSON, scope)
+    else:
+        # If file doesn't exist, try to parse as JSON content
+        try:
+            service_account_info = json.loads(SERVICE_JSON)
+            creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
+        except json.JSONDecodeError:
+            raise FileNotFoundError(f"Service account file '{SERVICE_JSON}' not found and GOOGLE_SERVICE_JSON is not valid JSON")
 
 client = gspread.authorize(creds)
 
