@@ -9,28 +9,41 @@ TZ = ZoneInfo("Asia/Kolkata")
 SHEET_NAME = os.getenv("SHEET_NAME", "Zoom Impact Bot Data")
 SERVICE_JSON = os.getenv("GOOGLE_SERVICE_JSON", "service_account.json")
 
+# Debug information for Railway deployment
+print(f"Environment check:")
+print(f"SHEET_NAME: {SHEET_NAME}")
+print(f"SERVICE_JSON type: {type(SERVICE_JSON)}")
+print(f"SERVICE_JSON length: {len(SERVICE_JSON) if SERVICE_JSON else 'None'}")
+print(f"SERVICE_JSON starts with '{{': {SERVICE_JSON.startswith('{') if SERVICE_JSON else False}}")
+
 scope = [
     "https://spreadsheets.google.com/feeds",
     "https://www.googleapis.com/auth/drive"
 ]
 
 # Handle both file path and JSON content for Railway deployment
-if SERVICE_JSON.startswith('{'):
-    # JSON content provided directly (Railway deployment)
-    service_account_info = json.loads(SERVICE_JSON)
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-else:
-    # File path provided (local development)
-    # Check if file exists before trying to use it
-    if os.path.exists(SERVICE_JSON):
-        creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_JSON, scope)
+try:
+    if SERVICE_JSON.startswith('{'):
+        # JSON content provided directly (Railway deployment)
+        service_account_info = json.loads(SERVICE_JSON)
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
     else:
-        # If file doesn't exist, try to parse as JSON content
-        try:
-            service_account_info = json.loads(SERVICE_JSON)
-            creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-        except json.JSONDecodeError:
-            raise FileNotFoundError(f"Service account file '{SERVICE_JSON}' not found and GOOGLE_SERVICE_JSON is not valid JSON")
+        # File path provided (local development)
+        # Check if file exists before trying to use it
+        if os.path.exists(SERVICE_JSON):
+            creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_JSON, scope)
+        else:
+            # If file doesn't exist, try to parse as JSON content
+            try:
+                service_account_info = json.loads(SERVICE_JSON)
+                creds = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
+            except json.JSONDecodeError:
+                raise FileNotFoundError(f"Service account file '{SERVICE_JSON}' not found and GOOGLE_SERVICE_JSON is not valid JSON")
+except Exception as e:
+    print(f"Error initializing Google Sheets credentials: {e}")
+    print(f"SERVICE_JSON value: {SERVICE_JSON[:100]}..." if len(SERVICE_JSON) > 100 else f"SERVICE_JSON value: {SERVICE_JSON}")
+    print("Please check your GOOGLE_SERVICE_JSON environment variable.")
+    raise
 
 client = gspread.authorize(creds)
 
